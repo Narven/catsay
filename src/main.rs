@@ -1,5 +1,7 @@
+extern crate colored;
 extern crate structopt;
 
+use colored::*;
 use structopt::StructOpt;
 
 #[derive(StructOpt)]
@@ -22,10 +24,10 @@ fn main() {
         eprintln!("A cat shouldn't bark like a dog.");
     }
 
-    println!("{}", message);
+    println!("{}", message.bright_yellow().underline().on_purple());
     println!("  \\");
     println!("   \\");
     println!("     /\\_/\\");
-    println!("    ( {eye} {eye} )", eye = eye);
+    println!("    ( {eye} {eye} )", eye = eye.red().bold());
     println!("    =( I )=");
 }
