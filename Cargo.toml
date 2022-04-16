@@ -3,6 +3,8 @@ name = "catsay"
 version = "0.1.0"
 edition = "2021"
 authors = ["Pedro Luz <pedromsluz@gmail.com>"]
+description = "A terminal command for cats"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
