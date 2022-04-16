@@ -2,6 +2,7 @@ extern crate colored;
 extern crate structopt;
 
 use colored::*;
+use std::io::{self, Read};
 use structopt::StructOpt;
 
 #[derive(StructOpt)]
@@ -17,11 +18,22 @@ struct Options {
     #[structopt(short = "f", long = "file", parse(from_os_str))]
     /// Load the cat picture from the specified file
     catfile: Option<std::path::PathBuf>,
+
+    #[structopt(short = "i", long = "stdin")]
+    /// Read the message from STDIN instead of argument
+    stdin: bool,
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let options = Options::from_args();
-    let message = options.message;
+    let mut message = String::new();
+
+    if options.stdin {
+        io::stdin().read_to_string(&mut message)?;
+    } else {
+        message = options.message;
+    }
+
     let eye = if options.dead { "x" } else { "o" };
 
     if message.to_lowercase() == "woof" {
@@ -30,10 +42,10 @@ fn main() {
 
     match &options.catfile {
         Some(path) => {
-            let cat_template =
-                std::fs::read_to_string(path).expect(&format!("could not read file {:?}", path));
+            let cat_template = std::fs::read_to_string(path)?; // .expect(&format!("could not read file {:?}", path));
             let cat_picture = cat_template.replace("{eye}", eye);
             println!("{}", &cat_picture);
+            Ok(())
         }
         None => {
             println!("{}", message.bright_yellow().underline().on_purple());
@@ -42,6 +54,7 @@ fn main() {
             println!("     /\\_/\\");
             println!("    ( {eye} {eye} )", eye = eye.red().bold());
             println!("    =( I )=");
+            Ok(())
         }
     }
 }
